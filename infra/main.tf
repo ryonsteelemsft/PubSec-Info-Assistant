@@ -488,6 +488,7 @@ module "functions" {
   container_registry_id                 = module.acr.acr_id
   azure_environment                     = var.azure_environment
   azure_ai_credential_domain            = var.azure_ai_private_link_domain
+  
 }
 
 module "openaiServices" {
@@ -894,3 +895,117 @@ resource "azurerm_resource_group_template_deployment" "customer_attribution" {
 }
 TEMPLATE
 }
+
+
+####### VM STUFF ########
+
+
+# resource "random_password" "admin_password" {
+#   length  = 9
+#   special = true
+# }
+
+# resource "azurerm_network_interface" "example" {
+#   name                = "secure-vm-nic"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+
+#   ip_configuration {
+#     name                          = "internal"
+#     subnet_id                     = var.is_secure_mode ? module.network[0].snetApp_id : null 
+#     private_ip_address_allocation = "Dynamic"
+#     public_ip_address_id          = azurerm_public_ip.example.id 
+#   }
+# }
+
+
+
+# resource "azurerm_network_security_group" "example" {
+#   name                = "secure-vm-nsg"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+
+#   security_rule {
+#     name                       = "SSH"
+#     priority                   = 1001
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "22"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
+
+#   security_rule {
+#     name                       = "HTTP"
+#     priority                   = 1002
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "80"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
+
+#     security_rule {
+#     name                       = "RDP"
+#     priority                   = 1003
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "3389"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
+# }
+
+
+
+# resource "azurerm_network_interface_security_group_association" "example" {
+#   network_interface_id      = azurerm_network_interface.example.id
+#   network_security_group_id = azurerm_network_security_group.example.id
+# }
+
+
+# resource "azurerm_public_ip" "example" {
+#   name                = "secure-vm-pip"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   allocation_method   = "Static"
+# }
+
+
+
+# resource "azurerm_windows_virtual_machine" "example" {
+#   name                = "secure-ia-vm"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = azurerm_resource_group.rg.location
+#   size                = "Standard_D8s_v3"
+#   admin_username      = "adminuser"
+#   admin_password      = "Adminuser1!" # random_password.admin_password.result
+
+#   network_interface_ids = [
+#     azurerm_network_interface.example.id,
+#   ]
+
+#   os_disk {
+#     caching              = "ReadWrite"
+#     storage_account_type = "Standard_LRS"
+#   }
+
+#   source_image_reference {
+#     publisher = "MicrosoftWindowsDesktop"
+#     offer     = "windows-11"
+#     sku       = "win11-24h2-pro"
+#     version   = "latest"
+#   }
+
+#   computer_name = "hostname"
+
+#   identity {
+#     type = "SystemAssigned"
+#   }
+# }

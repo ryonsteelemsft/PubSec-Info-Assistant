@@ -23,6 +23,17 @@ from azure.storage.blob import (
 from text import nonewlines
 from core.modelhelper import get_token_limit
 import requests
+import httpx
+
+# class CustomAsyncAzureOpenAI(AsyncAzureOpenAI):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+        
+#     async def request(self, method, url, params=None, data=None, json=None, **kwargs):
+#         headers = kwargs.get("headers", {})
+#         headers["Ocp-Apim-Subscription-Key"] = "ce7e5591520e4560aaf033dad81c7fa7"
+#         kwargs["headers"] = headers
+#         return await super().request(method, url, params, data, json, **kwargs)
 
 class ChatReadRetrieveReadApproach(Approach):
     """Approach that uses a simple retrieve-then-read implementation, using the Azure AI Search and
@@ -121,18 +132,28 @@ class ChatReadRetrieveReadApproach(Approach):
         self.azure_ai_endpoint=azure_ai_endpoint
         self.azure_ai_location=azure_ai_location
         self.azure_ai_token_provider=azure_ai_token_provider
-        self.oai_endpoint=oai_endpoint
+        self.oai_endpoint="https://apim-service-lty2v.azure-api.us" #oai_endpoint
         self.embedding_service_url = enrichment_appservice_uri
         self.use_semantic_reranker=use_semantic_reranker
         
-        openai.api_base = oai_endpoint
+        openai.api_base = self.oai_endpoint
         openai.api_type = 'azure'
-        openai.api_version = "2024-02-01"
+        openai.api_version = "2024-05-01-preview" #"2024-02-01"
+
+        http_client = httpx.AsyncClient(
+            headers={
+                "Ocp-Apim-Subscription-Key": "ce7e5591520e4560aaf033dad81c7fa7"
+            }
+    )
         
+        # self.client = CustomAsyncAzureOpenAI(
         self.client = AsyncAzureOpenAI(
         azure_endpoint = openai.api_base,
+        # api_key = openai.api_key,
         azure_ad_token_provider=azure_ai_token_provider,
-        api_version=openai.api_version)
+        api_version=openai.api_version,
+        http_client=http_client
+        )
                
 
         self.model_name = model_name

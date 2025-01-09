@@ -177,8 +177,8 @@ openai_mgmt_client = CognitiveServicesManagementClient(
     credential_scopes=[ENV["AZURE_ARM_MANAGEMENT_API"] + "/.default"])
 
 deployment = openai_mgmt_client.deployments.get(
-    resource_group_name=ENV["AZURE_OPENAI_RESOURCE_GROUP"],
-    account_name=ENV["AZURE_OPENAI_SERVICE"],
+    resource_group_name="rg-virginia", #ENV["AZURE_OPENAI_RESOURCE_GROUP"],
+    account_name="openai-virginia", #ENV["AZURE_OPENAI_SERVICE"],
     deployment_name=ENV["AZURE_OPENAI_CHATGPT_DEPLOYMENT"])
 
 MODEL_NAME = deployment.properties.model.name
@@ -186,8 +186,8 @@ MODEL_VERSION = deployment.properties.model.version
 
 if str_to_bool.get(ENV["USE_AZURE_OPENAI_EMBEDDINGS"]):
     embedding_deployment = openai_mgmt_client.deployments.get(
-        resource_group_name=ENV["AZURE_OPENAI_RESOURCE_GROUP"],
-        account_name=ENV["AZURE_OPENAI_SERVICE"],
+        resource_group_name="rg-virginia", #ENV["AZURE_OPENAI_RESOURCE_GROUP"],
+        account_name="openai-virginia", #ENV["AZURE_OPENAI_SERVICE"],
         deployment_name=ENV["EMBEDDING_DEPLOYMENT_NAME"])
 
     EMBEDDING_MODEL_NAME = embedding_deployment.properties.model.name

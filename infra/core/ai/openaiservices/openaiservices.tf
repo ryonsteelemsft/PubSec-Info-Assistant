@@ -40,25 +40,25 @@ resource "azurerm_cognitive_deployment" "deployment" {
   }
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs" {
-  count                      = var.useExistingAOAIService ? 0 : 1
-  name                       = azurerm_cognitive_account.openaiAccount[0].name
-  target_resource_id         = azurerm_cognitive_account.openaiAccount[0].id
-  log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
-  enabled_log  {
-    category = "Audit"
-  }
-  enabled_log {
-    category = "RequestResponse"
-  }
-  enabled_log {
-    category = "Trace"
-  }
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
-}
+# resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs" {
+#   count                      = var.useExistingAOAIService ? 0 : 1
+#   name                       = azurerm_cognitive_account.openaiAccount[0].name
+#   target_resource_id         = azurerm_cognitive_account.openaiAccount[0].id
+#   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
+#   enabled_log  {
+#     category = "Audit"
+#   }
+#   enabled_log {
+#     category = "RequestResponse"
+#   }
+#   enabled_log {
+#     category = "Trace"
+#   }
+#   metric {
+#     category = "AllMetrics"
+#     enabled  = true
+#   }
+# }
 
 data "azurerm_subnet" "subnet" {
   count                = var.is_secure_mode ? 1 : 0

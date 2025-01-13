@@ -28,6 +28,7 @@ from shared_code.utilities_helper import UtilitiesHelper
 from shared_code.status_log import State, StatusClassification, StatusLog
 from azure.storage.blob import BlobServiceClient
 from urllib.parse import unquote
+import httpx
 
 # === ENV Setup ===
 
@@ -65,13 +66,19 @@ for key, value in ENV.items():
     elif value is None:
         raise ValueError(f"Environment variable {key} not set")
     
-openai.api_base = ENV["AZURE_OPENAI_ENDPOINT"]
+openai.api_base = "https://apim-service-lty2v.azure-api.us" #ENV["AZURE_OPENAI_ENDPOINT"]
 openai.api_type = "azure"
 if ENV["AZURE_OPENAI_AUTHORITY_HOST"] == "AzureUSGovernment":
     AUTHORITY = AzureAuthorityHosts.AZURE_GOVERNMENT
 else:
     AUTHORITY = AzureAuthorityHosts.AZURE_PUBLIC_CLOUD
-openai.api_version = "2024-02-01"
+openai.api_version = "2024-05-01-preview"
+
+http_client = httpx.Client(
+    headers={
+        "Ocp-Apim-Subscription-Key": "16b054c4691944a6a593c8d2a2c1fa8e"
+    }
+)    
 
 # When debugging in VSCode, use the current user identity to authenticate with Azure OpenAI,
 # Cognitive Search and Blob Storage (no secrets needed, just use 'az login' locally)
@@ -92,7 +99,8 @@ openai.azure_ad_token_provider = token_provider
 client = AzureOpenAI(
         azure_endpoint = openai.api_base,
         azure_ad_token_provider=token_provider,
-        api_version=openai.api_version)
+        api_version=openai.api_version,
+        http_client=http_client)
 
 class AzOAIEmbedding(object):
     """A wrapper for a Azure OpenAI Embedding model"""
@@ -102,6 +110,7 @@ class AzOAIEmbedding(object):
     @retry(wait=wait_random_exponential(multiplier=1, max=10), stop=stop_after_attempt(5))
     def encode(self, texts):
         """Embeds a list of texts using a given model"""
+        # logging.info(f"Azure OpenAI Endpoint: {client.endpoint}")
         response = client.embeddings.create(
         model= self.deployment_name,
         input=texts

@@ -25,15 +25,7 @@ from core.modelhelper import get_token_limit
 import requests
 import httpx
 
-# class CustomAsyncAzureOpenAI(AsyncAzureOpenAI):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-        
-#     async def request(self, method, url, params=None, data=None, json=None, **kwargs):
-#         headers = kwargs.get("headers", {})
-#         headers["Ocp-Apim-Subscription-Key"] = "ce7e5591520e4560aaf033dad81c7fa7"
-#         kwargs["headers"] = headers
-#         return await super().request(method, url, params, data, json, **kwargs)
+
 
 class ChatReadRetrieveReadApproach(Approach):
     """Approach that uses a simple retrieve-then-read implementation, using the Azure AI Search and
@@ -142,10 +134,9 @@ class ChatReadRetrieveReadApproach(Approach):
 
         http_client = httpx.AsyncClient(
             headers={
-                "Ocp-Apim-Subscription-Key": "ce7e5591520e4560aaf033dad81c7fa7"
+                "Ocp-Apim-Subscription-Key": "16b054c4691944a6a593c8d2a2c1fa8e"
             }
-    )
-        
+        )
         # self.client = CustomAsyncAzureOpenAI(
         self.client = AsyncAzureOpenAI(
         azure_endpoint = openai.api_base,
@@ -240,7 +231,8 @@ class ChatReadRetrieveReadApproach(Approach):
         thought_chain["work_search_term"] = generated_query
         
         # Generate embedding using REST API
-        url = f'{self.embedding_service_url}/models/{self.escaped_target_model}/embed'
+        # url = f'{self.embedding_service_url}/models/{self.escaped_target_model}/embed'
+        url = f'http://127.0.0.1:5001/models/{self.escaped_target_model}/embed'
         data = [f'"{generated_query}"']
         
         headers = {
@@ -523,3 +515,7 @@ class ChatReadRetrieveReadApproach(Approach):
         except Exception as error:
             logging.error(f"Unable to parse source file name: {str(error)}")
             return ""
+        
+    # async def close(self):
+    #     """Closes the AsyncAzureOpenAI client."""
+    #     await self.client.close()        

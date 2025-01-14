@@ -66,7 +66,7 @@ for key, value in ENV.items():
     elif value is None:
         raise ValueError(f"Environment variable {key} not set")
     
-openai.api_base = "https://apim-service-lty2v.azure-api.us" #ENV["AZURE_OPENAI_ENDPOINT"]
+openai.api_base = "https://apim-service-kqdtx.azure-api.us" #ENV["AZURE_OPENAI_ENDPOINT"]
 openai.api_type = "azure"
 if ENV["AZURE_OPENAI_AUTHORITY_HOST"] == "AzureUSGovernment":
     AUTHORITY = AzureAuthorityHosts.AZURE_GOVERNMENT
@@ -76,7 +76,7 @@ openai.api_version = "2024-05-01-preview"
 
 http_client = httpx.Client(
     headers={
-        "Ocp-Apim-Subscription-Key": "16b054c4691944a6a593c8d2a2c1fa8e"
+        "Ocp-Apim-Subscription-Key": "21068184fdac437d84d077b9a90b9244"
     }
 )    
 

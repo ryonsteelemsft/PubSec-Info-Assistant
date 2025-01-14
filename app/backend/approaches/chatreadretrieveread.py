@@ -124,7 +124,7 @@ class ChatReadRetrieveReadApproach(Approach):
         self.azure_ai_endpoint=azure_ai_endpoint
         self.azure_ai_location=azure_ai_location
         self.azure_ai_token_provider=azure_ai_token_provider
-        self.oai_endpoint="https://apim-service-lty2v.azure-api.us" #oai_endpoint
+        self.oai_endpoint="https://apim-service-kqdtx.azure-api.us" #oai_endpoint
         self.embedding_service_url = enrichment_appservice_uri
         self.use_semantic_reranker=use_semantic_reranker
         
@@ -134,7 +134,7 @@ class ChatReadRetrieveReadApproach(Approach):
 
         http_client = httpx.AsyncClient(
             headers={
-                "Ocp-Apim-Subscription-Key": "16b054c4691944a6a593c8d2a2c1fa8e"
+                "Ocp-Apim-Subscription-Key": "21068184fdac437d84d077b9a90b9244"
             }
         )
         # self.client = CustomAsyncAzureOpenAI(
@@ -231,8 +231,8 @@ class ChatReadRetrieveReadApproach(Approach):
         thought_chain["work_search_term"] = generated_query
         
         # Generate embedding using REST API
-        # url = f'{self.embedding_service_url}/models/{self.escaped_target_model}/embed'
-        url = f'http://127.0.0.1:5001/models/{self.escaped_target_model}/embed'
+        url = f'{self.embedding_service_url}/models/{self.escaped_target_model}/embed'
+        # url = f'http://127.0.0.1:5001/models/{self.escaped_target_model}/embed'
         data = [f'"{generated_query}"']
         
         headers = {

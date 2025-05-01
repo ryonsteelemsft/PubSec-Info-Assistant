@@ -473,7 +473,8 @@ async def resubmit_Items(request: Request):
         submitted_blob_client = blob_container.get_blob_client(blob=path)
         blob_properties = submitted_blob_client.get_blob_properties()
         metadata = blob_properties.metadata
-        blob_container.upload_blob(name=path, data=blob_data, overwrite=True, metadata=metadata)   
+        content_type = blob_properties.content_settings.content_type
+        blob_container.upload_blob(name=path, data=blob_data, overwrite=True, metadata=metadata, content_settings=ContentSettings(content_type=content_type)) 
        
         
         
